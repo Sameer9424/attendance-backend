@@ -7,14 +7,19 @@ require("dotenv").config();
 
 const app = express();
 
-// ✅ Proper CORS config
-app.use(cors({
+const corsOptions = {
   origin: [
     "http://localhost:3000",
     "https://attendance-register-c2zx.vercel.app"
   ],
-  credentials: true
-}));
+  credentials: true,
+};
+
+// CORS middleware for all requests
+app.use(cors(corsOptions));
+
+// Explicitly handle OPTIONS preflight requests
+app.options("*", cors(corsOptions));
 
 app.use(express.json());
 
@@ -27,7 +32,7 @@ const mongoURI = process.env.MONGO_URI;
 
 if (!mongoURI) {
   console.error("ERROR: MONGO_URI is not defined in the environment variables.");
-  process.exit(1);  // Stop server if URI is missing
+  process.exit(1);
 }
 
 mongoose
@@ -35,7 +40,7 @@ mongoose
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => {
     console.error("MongoDB connection error:", err);
-    process.exit(1); // Stop server if connection fails
+    process.exit(1);
   });
 
 const PORT = process.env.PORT || 5000;
