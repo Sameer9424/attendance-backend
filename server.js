@@ -6,7 +6,16 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
-app.use(cors());
+
+// ✅ Proper CORS config
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "https://attendance-register-c2zx.vercel.app"
+  ],
+  credentials: true
+}));
+
 app.use(express.json());
 
 // Routes
